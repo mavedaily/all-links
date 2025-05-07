@@ -34,7 +34,7 @@
 </div>
 
 <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbzj_-B_b7qOdGXH0FQcUVRZ0XVxz9wtprF_0KRNeNYDoP2w0O0q9nQlq-cV3SFBKWEV/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycby9cZgiYtviDISNDg576gyRg8S3ZWikX-ZmmHc-UEt_NUZGIOw7E196jzb8gVN5VRmu/exec";
   const params = new URLSearchParams(window.location.search);
   const ref = params.get('ref') || 'unknown';
   const refNameElement = document.getElementById("refName");
@@ -48,22 +48,12 @@
   fetch('https://api.ipify.org?format=json')
     .then(res => res.json())
     .then(ipData => {
-      const data = {
-        ref: ref,
-        ip: ipData.ip,
-        device: navigator.userAgent
-      };
+      const finalURL = `${scriptURL}?ref=${encodeURIComponent(ref)}&ip=${ipData.ip}&device=${encodeURIComponent(navigator.userAgent)}`;
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(res => res.text())
-      .then(result => console.log("Logged to Sheet:", result))
-      .catch(err => console.error("Logging failed:", err));
+      fetch(finalURL)
+        .then(res => res.text())
+        .then(result => console.log("✅ Logged to Sheet (GET):", result))
+        .catch(err => console.error("❌ Logging failed (GET):", err));
     });
 </script>
 </body>
