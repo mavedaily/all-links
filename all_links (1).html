@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Links – Paper2Publish</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Manrope:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#0047ab; --secondary:#2a9d8f; --cream:#f4f1de; --shadow:0 8px 16px -4px rgba(0,0,0,.1); --border-radius:16px; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Manrope',sans-serif;background:var(--cream);overflow-x:hidden;line-height:1.6;}
+    .breathing-bg{position:fixed;width:100vw;height:100vh;z-index:-1;background:radial-gradient(circle at 10% 10%,var(--primary)0%,transparent 40%),radial-gradient(circle at 90% 90%,rgba(42,157,143,.15)0%,transparent 40%),linear-gradient(145deg,var(--cream)0%,#fff 100%);animation:breathe 6s infinite alternate ease-in-out;}
+    @keyframes breathe{0%{transform:scale(1);opacity:.85;}50%{transform:scale(1.01);opacity:1;}100%{transform:scale(1);opacity:.85;}}
+    .header{text-align:center;padding:2.5rem 1rem 1rem;}
+    .header img{width:100px;margin-bottom:1rem;}
+    .header h2{color:var(--primary);font-size:2.25rem;}
+    .header p{color:#2a2a2a;font-size:1.1rem;}
+    .card{text-align:center;padding:2rem;margin-top:2rem;background:#fff;border-radius:var(--border-radius);box-shadow:var(--shadow);max-width:640px;margin-left:auto;margin-right:auto;}
+    .card h3{color:var(--primary);font-size:1.75rem;margin-bottom:.5rem;}
+    .card p{font-size:1rem;color:#333;}
+  </style>
+</head>
+<body>
+<div class="breathing-bg"></div>
+<div class="header">
+  <img src="https://i.imgur.com/VeWyAPt.png" alt="Logo">
+  <h2>PAPER2PUBLISH</h2>
+  <p>Welcome to our digital business card</p>
+</div>
+
+<div class="card">
+  <h3 id="refName">Welcome!</h3>
+  <p>This page was accessed via a team member's card. Scroll down for our full links, offers, and publishing services.</p>
+</div>
+
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxKZTGW4t-AUmFi2-j2M2XCM6h9ta013-HeV5Y9xgeju2ReCP1OKGIX0sLdIiYERKI/exec";
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref') || 'unknown';
+  const refNameElement = document.getElementById("refName");
+
+  if (ref !== 'unknown') {
+    refNameElement.textContent = `Welcome via ${ref.charAt(0).toUpperCase() + ref.slice(1)}'s Card`;
+  } else {
+    refNameElement.textContent = `Welcome!`;
+  }
+
+  fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(ipData => {
+      const data = {
+        ref: ref,
+        ip: ipData.ip,
+        device: navigator.userAgent
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(res => console.log("Logged to Sheet:", data));
+    });
+</script>
+</body>
+</html>
